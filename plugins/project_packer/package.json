@@ -1,0 +1,21 @@
+{
+  "name": "project_packer",
+  "version": "1.0.0",
+  "description": "A Blockbench plugin that uses Webpack and TypeScript",
+  "author": "Luuk Kablan",
+  "license": "MIT",
+  "main": "project_packer.js",
+  "files": [
+    "project_packer.js"
+  ],
+  "scripts": {
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0",
+    "ts-loader": "^8.0.0"
+  },
+  "dependencies": {}
+}
