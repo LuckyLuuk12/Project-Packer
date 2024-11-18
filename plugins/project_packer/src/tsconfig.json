@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "../../plugins",
-    "rootDir": "./src",
+    "rootDir": "./",
     "module": "es6",
     "target": "ES2017",
     "allowJs": true,
@@ -9,5 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "moduleResolution": "node"
-  }
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules"]
 }

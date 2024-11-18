@@ -1,7 +1,9 @@
+import { SELECT_PROJECT_BUTTON } from "./components/selectProjectButton";
+
 // @ts-ignore - allow the .register method to be called without error
-Plugin.register('project_packer', {
-  title: "Project Packer ",
-  author: "Luuk Kablan, Zegevlier",
+BBPlugin.register('project_packer', {
+  title: "Project Packer",
+  author: "Luuk Kablan & Zegevlier",
   icon: "icon.png",
   description: "Manage your Minecraft resource pack / project and optimize it!",
   has_changelog: false,
@@ -10,5 +12,8 @@ Plugin.register('project_packer', {
   variant: "both",
   website: "https://github.com/LuckyLuuk12/Project-Packer",
   repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
-  bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen"
+  bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",
+  onload() {
+    SELECT_PROJECT_BUTTON.register();
+  }
 });
