@@ -2,21 +2,40 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./components/selectProjectButton.ts":
-/*!*******************************************!*\
-  !*** ./components/selectProjectButton.ts ***!
-  \*******************************************/
+/***/ "./api/management.ts":
+/*!***************************!*\
+  !*** ./api/management.ts ***!
+  \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   SELECT_PROJECT_BUTTON: () => (/* binding */ SELECT_PROJECT_BUTTON)
+/* harmony export */   selectFolder: () => (/* binding */ selectFolder)
 /* harmony export */ });
-// @ts-ignore - idk why but I need this for the Action even though we used the blockbench-types
-let SELECT_PROJECT_BUTTON = new Action('select_project_button', {
-    name: 'Select Project',
-    icon: 'folder_open',
-});
+function selectFolder() {
+    // Opens a dialog to select a folder
+    console.log('Opening folder selection dialog');
+    // @ts-ignore
+    new Dialog({
+        id: 'project_packer_project_view_dialog',
+        title: 'ProjectPacker - Project View',
+        width: 600,
+        lines: [
+            `<div id="project_view_content" style="display: flex; flex-direction: column; height: 100%;">
+        <div id="project_folder_list" style="flex: 1; overflow-y: auto;">
+          <!-- Folder contents will be dynamically loaded here -->
+        </div>
+        <div class="dialog_bar">
+          <button id="load_project_button">Load Project</button>
+        </div>
+      </div>`
+        ],
+        onConfirm: function () {
+            console.log('[PP] Confirm button clicked');
+            // Handle project loading logic here
+        }
+    }).show();
+}
 
 
 /***/ })
@@ -84,8 +103,9 @@ var __webpack_exports__ = {};
   !*** ./index.ts ***!
   \******************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_selectProjectButton__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/selectProjectButton */ "./components/selectProjectButton.ts");
+/* harmony import */ var _api_management__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api/management */ "./api/management.ts");
 
+let SELECT_PACK_ACTION = null;
 // @ts-ignore - allow the .register method to be called without error
 BBPlugin.register('project_packer', {
     title: "Project Packer",
@@ -100,7 +120,19 @@ BBPlugin.register('project_packer', {
     repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
     bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",
     onload() {
-        _components_selectProjectButton__WEBPACK_IMPORTED_MODULE_0__.SELECT_PROJECT_BUTTON.register();
+        // @ts-ignore - idk why but I need this for the Action even though we used the blockbench-types
+        SELECT_PACK_ACTION = new Action('project_packer_select_pack_button', {
+            name: 'PP - Select Resource Pack',
+            icon: 'folder_open',
+            click: () => {
+                // Open the project view dialog when the button is clicked
+                console.log('Opening project view dialog');
+                (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.selectFolder)();
+            }
+        });
+    },
+    onunload() {
+        SELECT_PACK_ACTION.delete();
     }
 });
 
