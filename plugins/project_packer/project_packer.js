@@ -38,6 +38,80 @@ function selectFolder() {
 }
 
 
+/***/ }),
+
+/***/ "./components/ProjectPanel.ts":
+/*!************************************!*\
+  !*** ./components/ProjectPanel.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ProjectPanel: () => (/* binding */ ProjectPanel)
+/* harmony export */ });
+class ProjectPanel {
+    constructor() {
+        this.selectPack = new Action('pp_select_pack', {
+            name: 'Select Pack',
+            icon: 'icon1',
+            click: () => {
+                console.log('Select pack button pressed');
+                // Add your custom action logic here
+            }
+        });
+        this.exportPack = new Action('pp_export_pack', {
+            name: 'Export Pack',
+            icon: 'icon2',
+            click: () => {
+                console.log('Export pack button pressed');
+                // Add your custom action logic here
+            }
+        });
+        this.panel = new Panel({
+            id: 'pp_project_panel',
+            name: 'Project Panel',
+            icon: 'icon.png',
+            menu: {
+                actions: [
+                    'pp_select_pack',
+                    'pp_export_pack'
+                ]
+            },
+            expand_button: true,
+            default_side: 'left',
+            component: {
+                template: `
+          <div id="custom_panel_content" style="display: flex; flex-direction: column; padding: 10px; height: 100%">
+            <button id="pp_select_pack" class="pp-button pp-select">Select Pack</button>
+            <div class="pp-project-tree" style="height: 100%;"></div>
+            <button id="pp_select_pack" class="pp-button pp-export">Export Pack</button>
+          </div>
+        `,
+                methods: {
+                    customAction1: () => {
+                        this.selectPack.click();
+                    },
+                    customAction2: () => {
+                        this.exportPack.click();
+                    }
+                },
+                mounted() {
+                    document.getElementById('custom_button_1').addEventListener('click', this.methods.customAction1);
+                    document.getElementById('custom_button_2').addEventListener('click', this.methods.customAction2);
+                }
+            }
+        });
+    }
+    unregister() {
+        // Unregister the actions and the panel
+        this.selectPack.delete();
+        this.exportPack.delete();
+        this.panel.delete();
+    }
+}
+
+
 /***/ })
 
 /******/ 	});
@@ -104,8 +178,11 @@ var __webpack_exports__ = {};
   \******************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_management__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api/management */ "./api/management.ts");
+/* harmony import */ var _components_ProjectPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/ProjectPanel */ "./components/ProjectPanel.ts");
+
 
 let SELECT_PACK_ACTION = null;
+let PROJECT_PANEL = null;
 // @ts-ignore - allow the .register method to be called without error
 BBPlugin.register('project_packer', {
     title: "Project Packer",
@@ -120,6 +197,7 @@ BBPlugin.register('project_packer', {
     repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
     bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",
     onload() {
+        PROJECT_PANEL = new _components_ProjectPanel__WEBPACK_IMPORTED_MODULE_1__.ProjectPanel();
         // @ts-ignore - idk why but I need this for the Action even though we used the blockbench-types
         SELECT_PACK_ACTION = new Action('project_packer_select_pack_button', {
             name: 'PP - Select Resource Pack',
@@ -133,6 +211,7 @@ BBPlugin.register('project_packer', {
     },
     onunload() {
         SELECT_PACK_ACTION.delete();
+        PROJECT_PANEL.unregister();
     }
 });
 

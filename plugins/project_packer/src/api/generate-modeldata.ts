@@ -6,7 +6,7 @@
  */
 
 
-export function generateModelData(pack: Pack, settings: ModelDataSettings): void {
-  // TODO: implement the Pack and ModelDataSettings types and then use those to generate the model data file(s)
+// export function generateModelData(pack: Pack, settings: ModelDataSettings): void {
+//   // TODO: implement the Pack and ModelDataSettings types and then use those to generate the model data file(s)
   
-}
+// }

@@ -1,6 +1,8 @@
 import { selectFolder } from "./api/management";
+import { ProjectPanel } from "./components/ProjectPanel";
 
-let SELECT_PACK_ACTION = null;
+let SELECT_PACK_ACTION: Action | null = null;
+let PROJECT_PANEL: ProjectPanel | null = null;
 
 // @ts-ignore - allow the .register method to be called without error
 BBPlugin.register('project_packer', {
@@ -16,6 +18,7 @@ BBPlugin.register('project_packer', {
   repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
   bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",
   onload() { // Here we can create everything we need like actions, dialogs, etc. we probs should import those though
+    PROJECT_PANEL = new ProjectPanel();
     // @ts-ignore - idk why but I need this for the Action even though we used the blockbench-types
     SELECT_PACK_ACTION = new Action('project_packer_select_pack_button', {
       name: 'PP - Select Resource Pack',
@@ -29,5 +32,6 @@ BBPlugin.register('project_packer', {
   },
   onunload() { // Here we must delete and unload everything, otherwise you will have duplicate warnings on reload
     SELECT_PACK_ACTION.delete();
+    PROJECT_PANEL.unregister();
   }
 });
