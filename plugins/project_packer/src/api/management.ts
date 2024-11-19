@@ -1,25 +1,47 @@
-export function selectFolder(): void {
-  // Opens a dialog to select a folder
-  console.log('Opening folder selection dialog');
-  // @ts-ignore
-  new Dialog({
-    id: 'project_packer_project_view_dialog',
-    title: 'ProjectPacker - Project View',
-    width: 600,
-    lines: [
-      `<div id="project_view_content" style="display: flex; flex-direction: column; height: 100%;">
-        <div id="project_folder_list" style="flex: 1; overflow-y: auto;">
-          <!-- Folder contents will be dynamically loaded here -->
-        </div>
-        <div class="dialog_bar">
-          <button id="load_project_button">Load Project</button>
-        </div>
-      </div>`
-    ],
-    onConfirm: function() {
-      console.log('[PP] Confirm button clicked');
-      // Handle project loading logic here
-    }
-  }).show();
+import { Pack, File } from "../types";
 
+import * as fs from 'fs';
+import * as path from 'path';
+
+export function getPack(packPath: string): Pack {
+  const packName = path.basename(packPath);
+  const root = getFolder(packPath);
+  const settings = {};
+
+  return {
+    name: packName,
+    root,
+    settings
+  };
+}
+
+function getFolder(folderPath: string): File {
+  const folderName = path.basename(folderPath);
+  const items = fs.readdirSync(folderPath).map(itemName => {
+    const itemPath = path.join(folderPath, itemName);
+    const stats = fs.statSync(itemPath);
+
+    if (stats.isDirectory()) {
+      return getFolder(itemPath);
+    } else {
+      return getFile(itemPath);
+    }
+  });
+
+  return {
+    name: folderName,
+    type: 'folder',
+    path: folderPath,
+    items: items
+  }
+}
+
+function getFile(filePath: string): File {
+  const fileName = path.basename(filePath);
+
+  return {
+    name: fileName,
+    type: 'file',
+    path: filePath
+  }
 }
