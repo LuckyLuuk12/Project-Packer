@@ -1,11 +1,10 @@
 // @ts-ignore - idk why but I need this for the Action even though we used the blockbench-types
-
+import { Action, Bar } from "blockbench-types";
 export class SelectProjectButton {
   // @ts-ignore
   private action: Action;
 
   constructor() {
-    // @ts-ignore
     this.action = new Action('PP_select_pack_button', {
       name: 'Select Resource Pack',
       icon: 'folder_open',
@@ -19,8 +18,7 @@ export class SelectProjectButton {
   }
 
   private openProjectViewDialog() {
-    // @ts-ignore
-    new Dialog({
+    new Bar({
       id: 'project_packer_project_view_dialog',
       title: 'ProjectPacker - Project View',
       width: 600,
