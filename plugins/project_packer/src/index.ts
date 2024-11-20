@@ -1,10 +1,11 @@
-import { selectFolder } from "./api/management";
 import { ProjectPanel } from "./components/ProjectPanel";
-import { ProjectLoader } from "./components/ProjectLoader";
+import ProjectLoader from "./components/ProjectLoader";
+import { deleteActions } from "./components/Actions";
 
-let SELECT_PACK_ACTION: Action | null = null;
-let PROJECT_PANEL: ProjectPanel | null = null;
+
 let PROJECT_LOADER: ProjectLoader | null = null;
+let PROJECT_PANEL: ProjectPanel | null = null;
+
 
 // @ts-ignore - allow the .register method to be called without error
 BBPlugin.register('project_packer', {
@@ -15,26 +16,16 @@ BBPlugin.register('project_packer', {
   has_changelog: false,
   min_version: "4.11.0",
   max_version: "5.0.0",
-  variant: "both",
+  variant: "desktop", // TODO: we want web as well but need API support for that
   website: "https://github.com/LuckyLuuk12/Project-Packer",
   repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
   bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",
   onload() { // Here we can create everything we need like actions, dialogs, etc. we probs should import those though
     PROJECT_LOADER = new ProjectLoader();
     PROJECT_PANEL = new ProjectPanel();
-    // @ts-ignore - idk why but I need this for the Action even though we used the blockbench-types
-    SELECT_PACK_ACTION = new Action('project_packer_select_pack_button', {
-      name: 'PP - Select Resource Pack',
-      icon: 'folder_open',
-      click: () => {
-        // Open the project view dialog when the button is clicked
-        console.log('Opening project view dialog');
-        selectFolder();
-      }
-    });
   },
   onunload() { // Here we must delete and unload everything, otherwise you will have duplicate warnings on reload
-    SELECT_PACK_ACTION.delete();
     PROJECT_PANEL.unregister();
+    deleteActions();
   }
 });

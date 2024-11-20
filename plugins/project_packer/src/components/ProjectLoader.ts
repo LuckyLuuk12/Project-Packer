@@ -1,6 +1,10 @@
-export class ProjectLoader {
-  // private project: Pack; // TODO: implement the Pack type
-  private loader: ModelLoader;
+import { openFolderDialog } from "../api/management";
+import { Pack } from "../types";
+import { getPack } from "../api/management";
+
+export default class ProjectLoader {
+  static project: Pack | null; // TODO: implement the Pack type
+  private loader: ModelLoader | null;
 
   constructor() {
     this.loader = new ModelLoader('pp_project_loader', {
@@ -9,7 +13,7 @@ export class ProjectLoader {
       format_page: {
         component: {
           methods: {
-            // openLoader
+            openLoader: this.openLoader
           },
           template: `
             <div class="ewan-format-page" style="display:flex;flex-direction:column;height:100%">
@@ -36,5 +40,13 @@ export class ProjectLoader {
         }
       }
     });
+  }
+
+  private async openLoader(): Promise<void> {
+    const path = await openFolderDialog();
+    if (path) {
+      console.log('Selected folder:', path);
+      this.project = getPack(path);
+    }
   }
 }

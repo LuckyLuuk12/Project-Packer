@@ -1,4 +1,5 @@
 import { EXPORT_PACK_ACTION, SELECT_PACK_ACTION } from "./Actions";
+import ProjectLoader from "./ProjectLoader";
 
 export class ProjectPanel {
   private panel: Panel;
@@ -23,13 +24,7 @@ export class ProjectPanel {
       resizable: true,
       default_side: 'left',
       component: {
-        template: `
-          <div id="custom_panel_content" style="display: flex; flex-direction: column; padding: 10px; height: 100%">
-            <button id="pp_select_pack" class="pp-button pp-select">Select Pack</button>
-            <div class="pp-project-tree" style="height: 100%;"></div>
-            <button id="pp_export_pack" class="pp-button pp-export">Export Pack</button>
-          </div>
-        `,
+        template: this.getTemplate(),
         methods: {
           selectPack: () => {
             this.selectPack.click();
@@ -53,5 +48,17 @@ export class ProjectPanel {
     this.selectPack.delete();
     this.exportPack.delete();
     this.panel.delete();
+  }
+
+  private getTemplate() {
+    return `
+      <div id="custom_panel_content" style="display: flex; flex-direction: column; padding: 10px; height: 100%">
+        <button id="pp_select_pack" class="pp-button pp-select">Select Pack</button>
+        <div class="pp-project-tree" style="height: 100%;">` + ProjectLoader.project +
+        
+        
+        `</div>
+        <button id="pp_export_pack" class="pp-button pp-export">Export Pack</button>
+      </div>`;
   }
 }
