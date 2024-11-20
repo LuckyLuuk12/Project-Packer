@@ -25,19 +25,20 @@ export class ProjectPanel {
       default_side: 'left',
       component: {
         template: this.getTemplate(),
+        data: () => ({
+          pack: ProjectLoader.project?.name ?? 'No Pack Selected'
+        }),
         methods: {
           selectPack: () => {
             this.selectPack.click();
           },
           exportPack: () => {
             this.exportPack.click();
+          },
+          updatePack() {
+            // @ts-ignore
+            this.pack = ProjectLoader.project?.name ?? 'No Pack Selected';
           }
-        },
-        mounted() {
-          this.$nextTick(() => {
-            document.getElementById('pp_select_pack').addEventListener('click', this.selectPack);
-            document.getElementById('pp_export_pack').addEventListener('click', this.exportPack);
-          });
         }
       }
     });
@@ -51,14 +52,11 @@ export class ProjectPanel {
   }
 
   private getTemplate() {
-    return `
+    return /*html*/`
       <div id="custom_panel_content" style="display: flex; flex-direction: column; padding: 10px; height: 100%">
-        <button id="pp_select_pack" class="pp-button pp-select">Select Pack</button>
-        <div class="pp-project-tree" style="height: 100%;">` + ProjectLoader.project +
-        
-        
-        `</div>
-        <button id="pp_export_pack" class="pp-button pp-export">Export Pack</button>
+        <button id="pp_select_pack" class="pp-button pp-select" @click="selectPack()">Select Pack</button>
+        <div class="pp-project-tree" style="height: 100%;"> {{ pack }} </div>
+        <button id="pp_export_pack" class="pp-button pp-export" @click="exportPack()">Export Pack</button>
       </div>`;
   }
 }

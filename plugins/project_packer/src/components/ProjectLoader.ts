@@ -16,19 +16,15 @@ export default class ProjectLoader {
             openLoader: this.openLoader
           },
           template: `
-            <div class="ewan-format-page" style="display:flex;flex-direction:column;height:100%">
+            <div class="pp-format-page" style="display:flex;flex-direction:column;height:100%">
               <p class="format_description">Load a complete Resource Pack for easy access to all files with the Project Panel</p>
               <p class="format_target"><b>Target</b> : <span>Minecraft: Java Edition</span> <span>Resource Pack Management</span></p>
-              <content>
-                <h3 class="markdown">How to use:</h3>
-                <p class="markdown">
-                  <ul>
-                    <li><p>Press <strong>Load Resource Pack</strong> and select a <b>folder</b>.</p></li>
-                    <li><p>Use the Project Panel to select files and modify them.</p></li>
-                    <li><p>Press the export button to open the Export Dialog and complete your pack.</p></li>
-                  </ul>
-                </p>
-              </content>
+              <h3 class="markdown">How to use:</h3>
+              <ol>
+                <li>Press <strong>Load Resource Pack</strong> and select a <b>folder</b>.</li>
+                <li>Use the Project Panel to select files and modify them.</li>
+                <li>Press the export button to open the Export Dialog and complete your pack.</li>
+              </ol>
               <div class="button_bar">
                 <button id="create_new_model_button" style="margin-top:20px;margin-bottom:24px;" @click="openLoader()">
                   <i class="material-icons" />
@@ -45,8 +41,9 @@ export default class ProjectLoader {
   private async openLoader(): Promise<void> {
     const path = await openFolderDialog();
     if (path) {
-      console.log('Selected folder:', path);
+      console.log('[ProjectPacker] [ProjectLoader.ts] Selected folder:', path);
       ProjectLoader.project = getPack(path);
+      console.log('[ProjectPacker] [ProjectLoader.ts] Project loaded:', ProjectLoader.project);
     }
   }
 }
