@@ -191,7 +191,7 @@ class ProjectLoader {
         const path = await (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.openFolderDialog)();
         if (path) {
             console.log('Selected folder:', path);
-            this.project = (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.getPack)(path);
+            ProjectLoader.project = (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.getPack)(path);
         }
     }
 }

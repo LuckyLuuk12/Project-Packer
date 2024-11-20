@@ -46,7 +46,7 @@ export default class ProjectLoader {
     const path = await openFolderDialog();
     if (path) {
       console.log('Selected folder:', path);
-      this.project = getPack(path);
+      ProjectLoader.project = getPack(path);
     }
   }
 }
