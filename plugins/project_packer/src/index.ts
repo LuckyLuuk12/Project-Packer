@@ -1,8 +1,9 @@
 import { ProjectPanel } from "./components/ProjectPanel";
 import ProjectLoader from "./components/ProjectLoader";
 import { deleteActions } from "./components/Actions";
+import {STYLES} from "./styles";
 
-
+let PP_STYLES = null;
 let PROJECT_LOADER: ProjectLoader | null = null;
 let PROJECT_PANEL: ProjectPanel | null = null;
 
@@ -21,6 +22,7 @@ BBPlugin.register('project_packer', {
   repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
   bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",
   onload() { // Here we can create everything we need like actions, dialogs, etc. we probs should import those though
+    PP_STYLES = STYLES;
     PROJECT_LOADER = new ProjectLoader();
     PROJECT_PANEL = new ProjectPanel();
   },
