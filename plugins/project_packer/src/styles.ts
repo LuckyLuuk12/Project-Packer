@@ -57,6 +57,12 @@ export let STYLES = Blockbench.addCSS(/*css*/`
     color: var(--color-text);
     padding-left: 10px;
     overflow: hidden;
+    margin: 0;
+    padding: 0 0 0 5px;
+    width: 100%;
+    height: unset;
+    background: unset;
+    text-align: left;
 }
 .pp-file-extension {
     color: var(--extension-color);

@@ -354,8 +354,8 @@ class ProjectPanel {
                   </div>
                 </div>`;
             }
-            else {
-                return `
+            else { // TODO: make this @click work... parameterized functions do not seem to work even with ${}
+                return ` 
         <button class="pp-file" @click="open(item.name)">
           ${item.name.replace(/(.*)(\.[^.]*)$/, '$1<span class="pp-file-extension">$2</span>')}
         </button>`;
@@ -437,6 +437,12 @@ let STYLES = Blockbench.addCSS(/*css*/ `
     color: var(--color-text);
     padding-left: 10px;
     overflow: hidden;
+    margin: 0;
+    padding: 0 0 0 5px;
+    width: 100%;
+    height: unset;
+    background: unset;
+    text-align: left;
 }
 .pp-file-extension {
     color: var(--extension-color);
