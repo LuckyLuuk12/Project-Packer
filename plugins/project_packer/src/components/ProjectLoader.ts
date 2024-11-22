@@ -38,6 +38,10 @@ export default class ProjectLoader {
     });
   }
 
+  public unregister() {
+    this.loader.delete();
+  }
+
   private async openLoader(): Promise<void> {
     const path = await openFolderDialog();
     if (path) {

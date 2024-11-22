@@ -46,7 +46,7 @@ export class ProjectPanel {
           },
           open(name: string) {
             console.log('[ProjectPacker] [ProjectPanel.ts] Opened file:', name);
-            Project.name = name;
+            // Project.name = name;
           }
         }
       }
@@ -72,7 +72,7 @@ export class ProjectPanel {
     console.log('[ProjectPacker] [ProjectPanel.ts] Generating pack HTML:', pack);
     if (!pack) return '<!-- No pack selected -->';
 
-    const generateHtml = (item: PPFile, collapsedFolders: any): string => {
+    const generateHtml = (item: PPFile): string => {
       if (item.type === 'folder') {
         return `<div class="pp-folder">
                   <input type="checkbox" id="${item.path}" class="pp-folder-toggle">
@@ -81,17 +81,20 @@ export class ProjectPanel {
                     ${item.name}
                   </label>
                   <div class="pp-folder-contents">
-                    ${item.items.map(child => generateHtml(child, collapsedFolders)).join('')}
+                    ${item.items.filter(i => i.type === 'folder')
+                    .map(child => generateHtml(child)).join('')}
+                    ${item.items.filter(i => i.type === 'file')
+                    .map(child => generateHtml(child)).join('')}
                   </div>
                 </div>`;
       } else { // TODO: make this @click work... parameterized functions do not seem to work even with ${}
         return ` 
-        <button class="pp-file" @click="open(item.name)">
+        <a class="pp-file" href="${item.path}" target="_blank">
           ${item.name.replace(/(.*)(\.[^.]*)$/, '$1<span class="pp-file-extension">$2</span>')}
-        </button>`;
+        </a>`;
       }
     };
 
-    return generateHtml(pack.root, {});
+    return generateHtml(pack.root);
   }
 }

@@ -11,8 +11,8 @@ export let STYLES = Blockbench.addCSS(/*css*/`
     justify-content: space-between;
     height: 100%;
     max-height: 90vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: hidden;
+    font-size: 14px;
 }
 .pp-button {
     padding: 5px 10px;
@@ -36,6 +36,7 @@ export let STYLES = Blockbench.addCSS(/*css*/`
     overflow: hidden;
 }
 .pp-folder-name, .pp-folder-name:hover {
+    display: flex;
     background: unset;
     border-left: 3px solid var(--folder-color);
     color: var(--color-accent) !important;
@@ -63,6 +64,7 @@ export let STYLES = Blockbench.addCSS(/*css*/`
     height: unset;
     background: unset;
     text-align: left;
+    text-decoration: none !important;
 }
 .pp-file-extension {
     color: var(--extension-color);
@@ -70,14 +72,17 @@ export let STYLES = Blockbench.addCSS(/*css*/`
 
 .pp-folder-contents {
     display: none;
+    flex-direction: column;
 }
 
 .pp-folder-toggle:checked ~ .pp-folder-contents {
-    display: block;
+    display: flex;
 }
 
 .pp-folder-toggle {
     display: none;
 }
-    
+.pp-export {
+    margin-top: auto; 
+}
 `);

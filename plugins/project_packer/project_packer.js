@@ -248,6 +248,9 @@ class ProjectLoader {
             }
         });
     }
+    unregister() {
+        this.loader.delete();
+    }
     async openLoader() {
         const path = await (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.openFolderDialog)();
         if (path) {
@@ -317,7 +320,7 @@ class ProjectPanel {
                     },
                     open(name) {
                         console.log('[ProjectPacker] [ProjectPanel.ts] Opened file:', name);
-                        Project.name = name;
+                        // Project.name = name;
                     }
                 }
             }
@@ -341,7 +344,7 @@ class ProjectPanel {
         console.log('[ProjectPacker] [ProjectPanel.ts] Generating pack HTML:', pack);
         if (!pack)
             return '<!-- No pack selected -->';
-        const generateHtml = (item, collapsedFolders) => {
+        const generateHtml = (item) => {
             if (item.type === 'folder') {
                 return `<div class="pp-folder">
                   <input type="checkbox" id="${item.path}" class="pp-folder-toggle">
@@ -350,18 +353,21 @@ class ProjectPanel {
                     ${item.name}
                   </label>
                   <div class="pp-folder-contents">
-                    ${item.items.map(child => generateHtml(child, collapsedFolders)).join('')}
+                    ${item.items.filter(i => i.type === 'folder')
+                    .map(child => generateHtml(child)).join('')}
+                    ${item.items.filter(i => i.type === 'file')
+                    .map(child => generateHtml(child)).join('')}
                   </div>
                 </div>`;
             }
             else { // TODO: make this @click work... parameterized functions do not seem to work even with ${}
                 return ` 
-        <button class="pp-file" @click="open(item.name)">
+        <a class="pp-file" href="${item.path}" target="_blank">
           ${item.name.replace(/(.*)(\.[^.]*)$/, '$1<span class="pp-file-extension">$2</span>')}
-        </button>`;
+        </a>`;
             }
         };
-        return generateHtml(pack.root, {});
+        return generateHtml(pack.root);
     }
 }
 
@@ -391,8 +397,8 @@ let STYLES = Blockbench.addCSS(/*css*/ `
     justify-content: space-between;
     height: 100%;
     max-height: 90vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: hidden;
+    font-size: 14px;
 }
 .pp-button {
     padding: 5px 10px;
@@ -416,6 +422,7 @@ let STYLES = Blockbench.addCSS(/*css*/ `
     overflow: hidden;
 }
 .pp-folder-name, .pp-folder-name:hover {
+    display: flex;
     background: unset;
     border-left: 3px solid var(--folder-color);
     color: var(--color-accent) !important;
@@ -443,6 +450,7 @@ let STYLES = Blockbench.addCSS(/*css*/ `
     height: unset;
     background: unset;
     text-align: left;
+    text-decoration: none !important;
 }
 .pp-file-extension {
     color: var(--extension-color);
@@ -450,16 +458,19 @@ let STYLES = Blockbench.addCSS(/*css*/ `
 
 .pp-folder-contents {
     display: none;
+    flex-direction: column;
 }
 
 .pp-folder-toggle:checked ~ .pp-folder-contents {
-    display: block;
+    display: flex;
 }
 
 .pp-folder-toggle {
     display: none;
 }
-    
+.pp-export {
+    margin-top: auto; 
+}
 `);
 
 
@@ -580,7 +591,7 @@ BBPlugin.register('project_packer', {
     has_changelog: false,
     min_version: "4.11.0",
     max_version: "5.0.0",
-    variant: "desktop",
+    variant: "both",
     website: "https://github.com/LuckyLuuk12/Project-Packer",
     repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
     bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",
@@ -590,7 +601,9 @@ BBPlugin.register('project_packer', {
         PROJECT_PANEL = new _components_ProjectPanel__WEBPACK_IMPORTED_MODULE_0__.ProjectPanel();
     },
     onunload() {
-        PROJECT_PANEL.unregister();
+        PP_STYLES === null || PP_STYLES === void 0 ? void 0 : PP_STYLES.delete();
+        PROJECT_LOADER === null || PROJECT_LOADER === void 0 ? void 0 : PROJECT_LOADER.unregister();
+        PROJECT_PANEL === null || PROJECT_PANEL === void 0 ? void 0 : PROJECT_PANEL.unregister();
         (0,_components_Actions__WEBPACK_IMPORTED_MODULE_2__.deleteActions)();
     }
 });
