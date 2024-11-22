@@ -29,8 +29,7 @@ export class ProjectPanel {
         template: this.getTemplate(),
         data: () => ({
           pack: ProjectLoader.project?.name ?? 'No Pack Selected',
-          packHtml: ProjectPanel.generatePackHtml(ProjectLoader.project),
-          collapsedFolders: reactive({})
+          packHtml: ProjectPanel.generatePackHtml(ProjectLoader.project)
         }),
         methods: {
           selectPack: () => {
@@ -45,11 +44,9 @@ export class ProjectPanel {
             // @ts-ignore
             this.packHtml = ProjectPanel.generatePackHtml(ProjectLoader.project);
           },
-          toggleFolder(folderPath: string) {
-            // @ts-ignore
-            this.collapsedFolders[folderPath] = !(this.collapsedFolders[folderPath] ?? false);
-            // @ts-ignore
-            this.packHtml = ProjectPanel.generatePackHtml(ProjectLoader.project);
+          open(name: string) {
+            console.log('[ProjectPacker] [ProjectPanel.ts] Opened file:', name);
+            Project.name = name;
           }
         }
       }
@@ -77,15 +74,21 @@ export class ProjectPanel {
 
     const generateHtml = (item: PPFile, collapsedFolders: any): string => {
       if (item.type === 'folder') {
-        const isCollapsed = collapsedFolders[item.path] ?? false;
         return `<div class="pp-folder">
-                  <button class="pp-folder-name" @click="toggleFolder('${item.path}')">${item.name}</button>
-                  <div class="pp-folder-contents" style="display: ${isCollapsed ? 'none' : 'block'};">
+                  <input type="checkbox" id="${item.path}" class="pp-folder-toggle">
+                  <label for="${item.path}" class="pp-folder-name">
+                    <i class="material-icons" style="margin-right: 4px;">folder</i>
+                    ${item.name}
+                  </label>
+                  <div class="pp-folder-contents">
                     ${item.items.map(child => generateHtml(child, collapsedFolders)).join('')}
                   </div>
                 </div>`;
-      } else {
-        return `<div class="pp-file">${item.name}</div>`;
+      } else { // TODO: make this @click work... parameterized functions do not seem to work even with ${}
+        return ` 
+        <button class="pp-file" @click="open(item.name)">
+          ${item.name.replace(/(.*)(\.[^.]*)$/, '$1<span class="pp-file-extension">$2</span>')}
+        </button>`;
       }
     };
 
