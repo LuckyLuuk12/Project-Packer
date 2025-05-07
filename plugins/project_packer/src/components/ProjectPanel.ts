@@ -7,6 +7,8 @@ export class ProjectPanel {
   private panel: Panel;
   private selectPack: Action;
   private exportPack: Action;
+  private pack: string;
+  private packHtml: string;
 
   constructor() {
     this.selectPack = SELECT_PACK_ACTION;
@@ -38,15 +40,15 @@ export class ProjectPanel {
           exportPack: () => {
             this.exportPack.click();
           },
-          updatePack() {
-            // @ts-ignore
+          updatePack: () => {
+            // @ts -ignore
             this.pack = ProjectLoader.project?.name ?? 'No Pack Selected';
-            // @ts-ignore
+            // @ts- ignore
             this.packHtml = ProjectPanel.generatePackHtml(ProjectLoader.project);
           },
           open(name: string) {
             console.log('[ProjectPacker] [ProjectPanel.ts] Opened file:', name);
-            // Project.name = name;
+            Project.name = name;
           }
         }
       }
@@ -70,11 +72,11 @@ export class ProjectPanel {
   }
   static generatePackHtml(pack: Pack): string {
     console.log('[ProjectPacker] [ProjectPanel.ts] Generating pack HTML:', pack);
-    if (!pack) return '<!-- No pack selected -->';
+    if (!pack) return /*html*/`<!-- No pack selected -->`;
 
     const generateHtml = (item: PPFile): string => {
       if (item.type === 'folder') {
-        return `<div class="pp-folder">
+        return /*html*/`<div class="pp-folder">
                   <input type="checkbox" id="${item.path}" class="pp-folder-toggle">
                   <label for="${item.path}" class="pp-folder-name">
                     <i class="material-icons" style="margin-right: 4px;">folder</i>
@@ -88,7 +90,7 @@ export class ProjectPanel {
                   </div>
                 </div>`;
       } else { // TODO: make this @click work... parameterized functions do not seem to work even with ${}
-        return ` 
+        return /*html*/` 
         <a class="pp-file" href="${item.path}" target="_blank">
           ${item.name.replace(/(.*)(\.[^.]*)$/, '$1<span class="pp-file-extension">$2</span>')}
         </a>`;

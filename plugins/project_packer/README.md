@@ -15,3 +15,9 @@
 
 ## How to Contribute
 If you want to contribute to this project then please either contact <a href="https://github.com/LuckyLuuk12/">The Author</a> if you intend to work on it as a collaborator or just fork, clone and make a pull request if you want to add small features.
+
+## How to build
+1. Open terminal in the `plugins\project_packer\src` folder
+2. run: `npm run build`
+3. In BlockBench go to `file > plugins` and search for this plugin
+4. Either reload or uninstall and load the `projets_packer.js` from file.

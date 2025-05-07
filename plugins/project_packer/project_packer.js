@@ -13,13 +13,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   getPack: () => (/* binding */ getPack),
 /* harmony export */   getPackFromFiles: () => (/* binding */ getPackFromFiles),
 /* harmony export */   openFolderDialog: () => (/* binding */ openFolderDialog),
-/* harmony export */   openFolderDialogOld: () => (/* binding */ openFolderDialogOld),
 /* harmony export */   openImage: () => (/* binding */ openImage)
 /* harmony export */ });
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! fs */ "fs");
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! path */ "path");
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_1__);
+// import { dialog } from "electron"; // Import remote from electron
 
 
 function openImage(file) {
@@ -38,40 +38,42 @@ function openImage(file) {
             readtype: 'image'
         }, files => {
             if (files.length) {
-                console.log('[ProjectPacker] [management.ts]Image file opened in Blockbench:', files[0]);
+                console.log('[ProjectPacker] [management.ts] Image file opened in BlockBench:', files[0]);
             }
         });
     });
 }
-async function openFolderDialog() {
-    return new Promise((resolve, reject) => {
-        var _a;
-        const input = (_a = document.getElementById('pp_open_folder_dialog')) !== null && _a !== void 0 ? _a : document.createElement('input');
-        input.type = 'file';
-        input.accept = '.mcmeta';
-        input.style.display = 'none'; // Hide the input element
-        input.webkitdirectory = true; // Allow selecting a directory
-        input.id = 'pp_open_folder_dialog';
-        document.body.appendChild(input); // Append the input to the body
-        input.onchange = (event) => {
-            const target = event.target;
-            if (target.files && target.files.length > 0) {
-                const filePath = target.files[0].path; // Use the full system path
-                console.log('[ProjectPacker] [management.ts] FilePath containing .mcmeta file:', filePath);
-                const folderPath = filePath.substring(0, filePath.lastIndexOf(path__WEBPACK_IMPORTED_MODULE_1__.sep));
-                console.log('[ProjectPacker] [management.ts] FolderPath containing .mcmeta file:', folderPath);
-                resolve(folderPath);
-            }
-            else {
-                console.log('[ProjectPacker] [management.ts] File dialog was canceled.');
-                resolve(null);
-            }
-            document.body.removeChild(input); // Remove the input element from the DOM
-        };
-        input.oncancel = reject;
-        input.click();
-    });
-}
+// export async function openFolderDialog(): Promise<string | null> {
+//   return new Promise((resolve, reject) => {
+//     const input =
+//         document.getElementById('pp_open_folder_dialog') as HTMLInputElement
+//         ?? document.createElement('input');
+//     input.type = 'file';
+//     input.accept = '.mcmeta';
+//     input.style.display = 'none'; // Hide the input element
+//     input.webkitdirectory = true; // Allow selecting a directory
+//     input.id = 'pp_open_folder_dialog';
+//     document.body.appendChild(input); // Append the input to the body
+//     input.onchange = (event: Event) => {
+//       const target = event.target as HTMLInputElement;
+//       if (target.files && target.files.length > 0) {
+//         console.log('[ProjectPacker] [management.ts] File dialog opened:', target.files[0], target.files[0].webkitRelativePath);
+//         const filePath = target.files[0].webkitRelativePath; // Use the full system path
+//         console.log('[ProjectPacker] [management.ts] FilePath containing .mcmeta file:', filePath);
+//         const folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
+//         console.log('[ProjectPacker] [management.ts] FolderPath containing .mcmeta file:', folderPath);
+//         fs
+//         resolve(folderPath);
+//       } else {
+//         console.log('[ProjectPacker] [management.ts] File dialog was canceled.');
+//         resolve(null);
+//       }
+//       document.body.removeChild(input); // Remove the input element from the DOM
+//     };
+//     input.oncancel = reject;
+//     input.click();
+//   });
+// }
 function getPack(packPath) {
     console.log('[ProjectPacker] [management.ts] Loading pack from path:', packPath);
     const packName = path__WEBPACK_IMPORTED_MODULE_1__.basename(packPath);
@@ -111,18 +113,46 @@ function getFile(filePath) {
     };
 }
 // Web attempt:
-async function openFolderDialogOld() {
-    let dirHandle = null;
-    try {
-        dirHandle = await window.showDirectoryPicker({ id: 'pp_open_folder_dialog', mode: 'readwrite', startIn: 'desktop' });
-        // TODO: does not seem to work, it opens a dialog tho
-        console.log('[ProjectPacker] [management.ts] Folder dialog opened:', dirHandle);
-        return dirHandle;
-    }
-    catch (err) {
-        console.error('[ProjectPacker] [management.ts] Failed to open folder dialog:', err);
-        return null;
-    }
+// export async function openFolderDialogOld(): Promise<any> {
+//   let dirHandle = null;
+//   try {
+//     dirHandle = await (window as any).showDirectoryPicker({ id: 'pp_open_folder_dialog', mode: 'readwrite', startIn: 'desktop' });
+//     // TODO: does not seem to work, it opens a dialog tho
+//     console.log('[ProjectPacker] [management.ts] Folder dialog opened:', dirHandle);
+//     return dirHandle;
+//   } catch (err) {
+//     console.error('[ProjectPacker] [management.ts] Failed to open folder dialog:', err);
+//     return null;
+//   }
+// }
+async function openFolderDialog() {
+    return new Promise((resolve, reject) => {
+        var _a;
+        const input = (_a = document.getElementById('pp_open_folder_dialog')) !== null && _a !== void 0 ? _a : document.createElement('input');
+        input.type = 'file';
+        input.accept = '.mcmeta';
+        input.style.display = 'none'; // Hide the input element
+        input.webkitdirectory = true; // Allow selecting a directory
+        input.id = 'pp_open_folder_dialog';
+        document.body.appendChild(input); // Append the input to the body
+        input.onchange = (event) => {
+            const target = event.target;
+            if (target.files && target.files.length > 0) {
+                console.log('[ProjectPacker] [management.ts] File dialog opened:', target.files);
+                // Use the files to construct a folder structure
+                const folderStructure = getFolderFromFiles(target.files);
+                console.log('[ProjectPacker] [management.ts] Folder structure:', folderStructure);
+                resolve(folderStructure);
+            }
+            else {
+                console.log('[ProjectPacker] [management.ts] File dialog was canceled.');
+                resolve(null);
+            }
+            document.body.removeChild(input); // Remove the input element from the DOM
+        };
+        input.oncancel = reject;
+        input.click();
+    });
 }
 function getPackFromFiles(filePath, files) {
     const packName = path__WEBPACK_IMPORTED_MODULE_1__.basename(filePath);
@@ -150,7 +180,7 @@ function getFileFromFiles(file) {
     return {
         name: file.name,
         type: 'file',
-        path: file.path
+        path: file.webkitRelativePath
     };
 }
 
@@ -177,11 +207,18 @@ let SELECT_PACK_ACTION = new Action('pp_select_pack', {
     name: 'Select Pack',
     icon: 'folder_open',
     click: () => {
-        (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.openFolderDialog)().then((path) => {
-            if (path) {
-                _ProjectLoader__WEBPACK_IMPORTED_MODULE_1__["default"].project = (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.getPack)(path);
-                // @ts-ignore
-                Interface.Panels.pp_project_panel.inside_vue.updatePack();
+        (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.openFolderDialog)().then((pack) => {
+            console.log('[ProjectPacker] [Actions.ts] Selected pack:', pack);
+            if (pack) {
+                _ProjectLoader__WEBPACK_IMPORTED_MODULE_1__["default"].project = {
+                    name: pack.name,
+                    root: pack,
+                    settings: {}
+                };
+                // @ts- ignore
+                Interface.Panels.pp_project_panel.inside_vue.$emit('updateProject', _ProjectLoader__WEBPACK_IMPORTED_MODULE_1__["default"].project);
+                Interface.Panels.pp_project_panel.inside_vue.$forceUpdate();
+                console.log('[ProjectPacker] [Actions.ts] Updated pack:', pack);
             }
             console.log('[ProjectPacker] [Actions.ts] Project loaded:', _ProjectLoader__WEBPACK_IMPORTED_MODULE_1__["default"].project);
         });
@@ -192,7 +229,8 @@ let EXPORT_PACK_ACTION = new Action('pp_export_pack', {
     icon: 'folder_zip',
     click: () => {
         console.log('[ProjectPacker] [Actions.ts] Exported pack:', _ProjectLoader__WEBPACK_IMPORTED_MODULE_1__["default"].project);
-        // Add your custom action logic here
+        // Perform optimization and fixing of issues in the pack
+        // Then export the pack with fs to either a location specified in the pack settings or make a dialog to select a location
     }
 });
 function deleteActions() {
@@ -214,7 +252,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ ProjectLoader)
 /* harmony export */ });
 /* harmony import */ var _api_management__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/management */ "./api/management.ts");
-
 
 class ProjectLoader {
     constructor() {
@@ -252,11 +289,18 @@ class ProjectLoader {
         this.loader.delete();
     }
     async openLoader() {
-        const path = await (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.openFolderDialog)();
-        if (path) {
-            console.log('[ProjectPacker] [ProjectLoader.ts] Selected folder:', path);
-            ProjectLoader.project = (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.getPack)(path);
+        const pack = await (0,_api_management__WEBPACK_IMPORTED_MODULE_0__.openFolderDialog)();
+        if (pack) {
+            console.log('[ProjectPacker] [ProjectLoader.ts] Selected folder:', pack);
+            ProjectLoader.project = {
+                name: pack.name,
+                root: pack,
+                settings: {}
+            };
             console.log('[ProjectPacker] [ProjectLoader.ts] Project loaded:', ProjectLoader.project);
+        }
+        else {
+            console.log('[ProjectPacker] [ProjectLoader.ts] No folder selected: ', pack);
         }
     }
 }
@@ -311,16 +355,16 @@ class ProjectPanel {
                     exportPack: () => {
                         this.exportPack.click();
                     },
-                    updatePack() {
+                    updatePack: () => {
                         var _a, _b;
-                        // @ts-ignore
+                        // @ts -ignore
                         this.pack = (_b = (_a = _ProjectLoader__WEBPACK_IMPORTED_MODULE_1__["default"].project) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : 'No Pack Selected';
-                        // @ts-ignore
+                        // @ts- ignore
                         this.packHtml = ProjectPanel.generatePackHtml(_ProjectLoader__WEBPACK_IMPORTED_MODULE_1__["default"].project);
                     },
                     open(name) {
                         console.log('[ProjectPacker] [ProjectPanel.ts] Opened file:', name);
-                        // Project.name = name;
+                        Project.name = name;
                     }
                 }
             }
@@ -343,10 +387,10 @@ class ProjectPanel {
     static generatePackHtml(pack) {
         console.log('[ProjectPacker] [ProjectPanel.ts] Generating pack HTML:', pack);
         if (!pack)
-            return '<!-- No pack selected -->';
+            return /*html*/ `<!-- No pack selected -->`;
         const generateHtml = (item) => {
             if (item.type === 'folder') {
-                return `<div class="pp-folder">
+                return /*html*/ `<div class="pp-folder">
                   <input type="checkbox" id="${item.path}" class="pp-folder-toggle">
                   <label for="${item.path}" class="pp-folder-name">
                     <i class="material-icons" style="margin-right: 4px;">folder</i>
@@ -361,7 +405,7 @@ class ProjectPanel {
                 </div>`;
             }
             else { // TODO: make this @click work... parameterized functions do not seem to work even with ${}
-                return ` 
+                return /*html*/ ` 
         <a class="pp-file" href="${item.path}" target="_blank">
           ${item.name.replace(/(.*)(\.[^.]*)$/, '$1<span class="pp-file-extension">$2</span>')}
         </a>`;
@@ -591,7 +635,7 @@ BBPlugin.register('project_packer', {
     has_changelog: false,
     min_version: "4.11.0",
     max_version: "5.0.0",
-    variant: "both",
+    variant: "desktop", // TODO: we want web as well but need API support for that
     website: "https://github.com/LuckyLuuk12/Project-Packer",
     repository: "https://github.com/JannisX11/blockbench-plugins/tree/master/plugins/project_packer",
     bug_tracker: "https://github.com/LuckyLuuk12/Project-Packer/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen",

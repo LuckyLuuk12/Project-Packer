@@ -43,11 +43,17 @@ export default class ProjectLoader {
   }
 
   private async openLoader(): Promise<void> {
-    const path = await openFolderDialog();
-    if (path) {
-      console.log('[ProjectPacker] [ProjectLoader.ts] Selected folder:', path);
-      ProjectLoader.project = getPack(path);
+    const pack = await openFolderDialog();
+    if (pack) {
+      console.log('[ProjectPacker] [ProjectLoader.ts] Selected folder:', pack);
+      ProjectLoader.project = { // getPack(path);
+        name: pack.name,
+        root: pack,
+        settings: {}
+      }
       console.log('[ProjectPacker] [ProjectLoader.ts] Project loaded:', ProjectLoader.project);
+    } else {
+      console.log('[ProjectPacker] [ProjectLoader.ts] No folder selected: ', pack);
     }
   }
 }
